@@ -1,4 +1,4 @@
-# my_smart_home_it
+# smart_home_app
 
 A new Flutter project.
 

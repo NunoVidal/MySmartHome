@@ -1,0 +1,123 @@
+Container(
+            height: 500, // Set a fixed height
+            child: SingleChildScrollView(
+              child: DefaultTabController(
+                  length: 2, // length of tabs
+                  initialIndex: 0,
+                  child: ListView(children: <Widget>[
+                    TabBar(
+                      labelColor: Colors.blue,
+                      unselectedLabelColor: Colors.black,
+                      tabs: const [
+                        Tab(
+                            text: 'Command',
+                            icon: Icon(Icons.settings_remote_outlined)),
+                        Tab(text: 'Schedulle', icon: Icon(Icons.schedule)),
+                      ],
+                      onTap: _onItemTapped,
+                    ),
+                    SizedBox(
+                        height: 800, //height of TabBarView
+                        child: TabBarView(children: <Widget>[
+                          ExplicitLightConfig(deviceId: lightId),
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              for (var i = 0;
+                                  i < lamps[lightId].schedule.length;
+                                  i++)
+                                Card(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      ListTile(
+                                        title: Row(children: [
+                                          const Icon(Icons.calendar_today),
+                                          Text(
+                                            lamps[lightId].schedule[i].date,
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 129, 129, 129),
+                                            ),
+                                          )
+                                        ]),
+                                        subtitle: Row(children: [
+                                          const Icon(Icons.repeat),
+                                          Text(lamps[lightId]
+                                              .schedule[i]
+                                              .repeat),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          const Icon(Icons.timer),
+                                          Text(lamps[lightId]
+                                              .schedule[i]
+                                              .timer
+                                              .toString())
+                                        ]),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                                lamps[lightId].schedule[i].time,
+                                                style: TextStyle(fontSize: 25)),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.all(5),
+                                              height: 35,
+                                              child: Container(
+                                                height: 25,
+                                                width: 25,
+                                                decoration: BoxDecoration(
+                                                    color: lamps[lightId]
+                                                        .schedule[i]
+                                                        .color,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100)),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            if (!lamps[lightId]
+                                                .schedule[i]
+                                                .state)
+                                              Icon(Icons.dark_mode_sharp)
+                                            else
+                                              Icon(Icons.light_mode_sharp),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ]))
+                  ])),
+            ))
+
+
+            ListTile(
+          leading: const Icon(Icons.lightbulb, size: 50),
+          title:
+              Text(lamps[lightId].name, style: const TextStyle(fontSize: 22)),
+          subtitle: Text(lamps[lightId].model),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SwitchExample(deviceId: lightId),
+              const SizedBox(
+                width: 30,
+              ),
+            ],
+          ),
+        ),
