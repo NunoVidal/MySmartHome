@@ -7,7 +7,8 @@ class Lamp {
   String model = "Model XPTO";
   Color color = const Color.fromARGB(195, 0, 255, 179);
   String timer = "";
-  double timerDouble = 0.0;
+  int timerMinutes = 0;
+  int timerHours = 0;
   List<LampProgram> schedule = [];
 
   Lamp(this.name, this.id, this.color, this.model, this.timer);

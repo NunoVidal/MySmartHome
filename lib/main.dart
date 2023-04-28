@@ -8,7 +8,7 @@ import 'device_list.dart';
 
 void main() {
   lamps[0].schedule.add(LampProgram(const Color.fromARGB(195, 100, 25, 200),
-      true, "1:20", "10-06-2023", "15PM", "1 week"));
+      true, "1:20", "2023-05-15", "15:00", "1 week"));
   runApp(const MyApp());
 }
 
