@@ -8,3 +8,12 @@ List<Lamp> lamps = [
   Lamp("Office", 1, const Color.fromARGB(255, 200, 0, 0), "Samsung bulb 2.0",
       "0")
 ];
+
+
+//to do for blinds
+
+
+List<Sensor> sensores = [
+  Sensor("Greenhouse Humidity sensor", "Humidity sensor","Zigbee","%")
+];
+

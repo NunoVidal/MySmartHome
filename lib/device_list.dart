@@ -35,6 +35,7 @@ class _DeviceListState extends State<DeviceList> {
                 DeviceElevatedCard(
                   name: lamps[i].name,
                   id: lamps[i].id,
+                  deviceType: "light",
                   updateParent: refresh,
                 )
             ],
@@ -42,7 +43,32 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    } else {
+    } else if (super.widget.type == "Sensor"){
+      return Scaffold(
+        appBar: AppBar(
+          leading: BackButton(
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              for (var i = 0; i < sensores.length; i++)
+                DeviceElevatedCard(
+                  name: sensores[i].name,
+                  id: sensores[i].id,
+                  deviceType: "sensor",
+                  updateParent: refresh,
+                )
+            ],
+          ),
+        ),
+        drawer: const NavBar(),
+      );
+    }else{
       return const Scaffold();
     }
   }

@@ -65,44 +65,79 @@ class DeviceGroupElevatedCard extends StatelessWidget {
 class DeviceElevatedCard extends StatelessWidget {
   final String name;
   final int id;
+  final String deviceType;
   final Function updateParent;
 
   const DeviceElevatedCard({
     Key? key,
     required this.name,
     required this.id,
+    required this.deviceType,
     required this.updateParent,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: GestureDetector(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              title: Text(name),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  LightConfig(deviceId: id),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  const Icon(Icons.arrow_forward)
-                ],
-              ),
-            )
-          ],
+    if (deviceType == 'light')
+    {
+      return Center(
+          child: GestureDetector(
+        child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: Text(name),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LightConfig(deviceId: id),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    const Icon(Icons.arrow_forward)
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-      onTap: () {
-        Navigator.pushNamed(context, '/light', arguments: id)
-            .then((result) => updateParent());
-      },
-    ));
+        onTap: () {
+          Navigator.pushNamed(context, '/light', arguments: id)
+              .then((result) => updateParent());
+        },
+      ));
+    }else if (deviceType == "sensor"){
+      return Center(
+          child: GestureDetector(
+        child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: Text(name),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                     Text("sometext"),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Icon(Icons.arrow_forward)
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        onTap: () {
+          Navigator.pushNamed(context, '/sensor', arguments: id)
+              .then((result) => updateParent());
+        },
+      ));
+    }else{
+      return Center(child: GestureDetector());
+    }
   }
 }
 

@@ -28,6 +28,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const MyHomePage(),
         '/device_list_Lighting': (context) =>
             const DeviceList(type: "lighting"),
+        '/device_list_Sensors': (context) =>
+            const DeviceList(type: "Sensor"),
         '/light': (context) => const LightState(),
       },
     );

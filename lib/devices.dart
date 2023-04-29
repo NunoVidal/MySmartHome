@@ -34,4 +34,18 @@ class LampProgram {
 
 class Blind {}
 
-class Sensor {}
+class Sensor {
+  int id = 0;
+  String name = "";
+  String category = "";
+  int dataGatherInterval = 5; //in minutes
+  double currentVal = 0.0; 
+  String protocol;
+  String unit = "";
+  Map<DateTime,double> history = {};
+
+  Sensor(this.name,this.category,this.protocol,this.unit);
+
+
+
+}

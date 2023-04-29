@@ -30,6 +30,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               name: "Lighting",
               nDevices: lamps.length,
+            ),
+            DeviceGroupElevatedCard(
+              icon: const Icon(
+                Icons.sensors,
+                size: 40.0,
+              ),
+              name: "Sensors",
+              nDevices: sensores.length,
             )
           ],
         ),
