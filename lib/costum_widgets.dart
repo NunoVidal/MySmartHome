@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:intl/intl.dart';
@@ -118,12 +119,12 @@ class DeviceElevatedCard extends StatelessWidget {
                 title: Text(name),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                     Text("sometext"),
-                    SizedBox(
+                  children:  [
+                    Text("${sensores[id].currentVal.toString()} ${sensores[id].unit}"),
+                    const SizedBox(
                       width: 30,
                     ),
-                    Icon(Icons.arrow_forward)
+                    const Icon(Icons.query_stats)
                   ],
                 ),
               )
