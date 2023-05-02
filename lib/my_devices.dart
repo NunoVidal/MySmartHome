@@ -14,3 +14,11 @@ List<Blind> blinds = [
   Blind("Jon's Bedroom", 1, 0,"0"),
   Blind("Office",1,0,"0")
 ];
+
+//to do for blinds
+
+
+List<Sensor> sensores = [
+  Sensor("Greenhouse Humidity sensor", "Humidity sensor","Zigbee","%")
+];
+

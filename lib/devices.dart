@@ -7,7 +7,8 @@ class Lamp {
   String model = "Model XPTO";
   Color color = const Color.fromARGB(195, 0, 255, 179);
   String timer = "";
-  double timerDouble = 0.0;
+  int timerMinutes = 0;
+  int timerHours = 0;
   List<LampProgram> schedule = [];
 
   Lamp(this.name, this.id, this.color, this.model, this.timer);
@@ -47,4 +48,18 @@ class BlindProgram{
 
 }
 
-class Sensor {}
+class Sensor {
+  int id = 0;
+  String name = "";
+  String category = "";
+  int dataGatherInterval = 5; //in minutes
+  double currentVal = 0.0; 
+  String protocol;
+  String unit = "";
+  Map<DateTime,double> history = {};
+
+  Sensor(this.name,this.category,this.protocol,this.unit);
+
+
+
+}
