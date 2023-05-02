@@ -31,6 +31,20 @@ class LampProgram {
 
 // todo:
 
-class Blind {}
+class Blind {
+  String name = "";
+  int id = 0;
+  int state = 0;
+  String timer = "";
+
+  Blind(this.name, this.id, this.state,this.timer);
+
+  //defineState()
+
+}
+
+class BlindProgram{
+
+}
 
 class Sensor {}

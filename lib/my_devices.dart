@@ -8,3 +8,9 @@ List<Lamp> lamps = [
   Lamp("Office", 1, const Color.fromARGB(255, 200, 0, 0), "Samsung bulb 2.0",
       "0")
 ];
+
+List<Blind> blinds = [
+  Blind("Living Room", 0, 0,"0"),
+  Blind("Jon's Bedroom", 1, 0,"0"),
+  Blind("Office",1,0,"0")
+];

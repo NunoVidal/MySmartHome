@@ -35,7 +35,31 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    } else {
+    
+    } 
+    
+    else if (super.widget.type == "blinding") {
+      return Scaffold(
+        appBar: AppBar(
+          leading: BackButton(
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              for (var i = 0; i < blinds.length; i++)
+                DeviceElevatedCard(name: blinds[i].name, id: blinds[i].id)
+            ],
+          ),
+        ),
+        drawer: const NavBar(),
+      );
+    }
+    else {
       return const Scaffold();
     }
   }
