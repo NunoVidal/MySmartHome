@@ -571,39 +571,6 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
   bool dateCheck = false;
   bool timeCheck = false;
 
-  var selectN = [
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-    '21',
-    '22',
-    '23',
-    '24',
-    '25',
-    '26',
-    '27',
-    '28',
-    '29',
-    '30'
-  ];
   var selectUnit = ['days', 'weeks', 'months'];
 
   DateTime gPickedDate = DateTime.now();
@@ -613,6 +580,11 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
   @override
   Widget build(BuildContext context) {
     var lightId = widget.deviceId;
+    var selectN = ['0'];
+
+    for (int i = 1; i <= 30; i++) {
+      selectN.add(i.toString());
+    }
 
     return AlertDialog(
       title: const Text('Scheduler'),
