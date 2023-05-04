@@ -38,28 +38,26 @@ class Blind {
   int state = 0;
   String timer = "";
 
-  Blind(this.name, this.id, this.state,this.timer);
+  Blind(this.name, this.id, this.state, this.timer);
 
   //defineState()
-
 }
 
-class BlindProgram{
-
-}
+class BlindProgram {}
 
 class Sensor {
   int id = 0;
   String name = "";
   String category = "";
   int dataGatherInterval = 5; //in minutes
-  double currentVal = 0.0; 
+  double currentVal = 0.0;
   String protocol;
   String unit = "";
-  Map<DateTime,double> history = {};
+  Map<DateTime, double> history = {};
 
-  Sensor(this.name,this.category,this.protocol,this.unit);
+  Sensor(this.name, this.category, this.protocol, this.unit);
 
-
-
+  createHistory(Map<DateTime, double> hist) {
+    history = hist;
+  }
 }

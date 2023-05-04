@@ -10,15 +10,13 @@ List<Lamp> lamps = [
 ];
 
 List<Blind> blinds = [
-  Blind("Living Room", 0, 0,"0"),
-  Blind("Jon's Bedroom", 1, 0,"0"),
-  Blind("Office",1,0,"0")
+  Blind("Living Room", 0, 0, "0"),
+  Blind("Jon's Bedroom", 1, 0, "0"),
+  Blind("Office", 1, 0, "0")
 ];
 
 //to do for blinds
 
-
 List<Sensor> sensores = [
-  Sensor("Greenhouse Humidity sensor", "Humidity sensor","Zigbee","%")
+  Sensor("Greenhouse Humidity sensor", "Humidity sensor", "Zigbee", "%")
 ];
-
