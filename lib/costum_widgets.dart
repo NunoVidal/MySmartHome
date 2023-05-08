@@ -823,3 +823,78 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
     );
   }
 }
+
+
+class MyDateTimePicker extends StatefulWidget {
+  final String label;
+  final DateTime defaultValue;
+  const MyDateTimePicker({super.key, required this.label,required this.defaultValue});
+  
+  @override
+  _MyDateTimePickerState createState() => _MyDateTimePickerState(label,defaultValue);
+}
+
+class _MyDateTimePickerState extends State<MyDateTimePicker> {
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+  TextEditingController dateController = TextEditingController();
+  
+  String label = "Enter Date";
+
+  _MyDateTimePickerState(this.label,this.selectedDate);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+            padding: const EdgeInsets.all(15),
+            height: 100,
+            width: 200,
+            child: Center(
+              child: TextField(
+                  controller: dateController, //editing controller of this TextField
+                    decoration:  InputDecoration( 
+                              icon: const Icon(Icons.calendar_today), //icon of text field
+                            labelText: label, //label text of field
+                      ),
+                    readOnly: true,  // when true user cannot edit text 
+                    onTap: () async {
+                           showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2021),
+                          lastDate: DateTime(2025)
+                        ).then((date) {
+                            if (date != null) {
+                              setState(() {
+                                selectedDate = date;
+                              });
+
+                              showTimePicker(
+                                context: context,
+                                initialTime: selectedTime,
+                              ).then((time) {
+                                if (time != null) {
+                                  setState(() {
+                                    selectedDate = DateTime(selectedDate.year,selectedDate.month,selectedDate.day,time.hour,time.minute);
+                                  });
+                                }
+                              });
+                              dateController.text = "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
+                            }
+                        });
+                      }
+            )
+            
+             /*ElevatedButton(
+              child: Text("${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedTime.hour}:${selectedTime.minute}"),
+              onPressed: () {
+                
+              },
+            ),*/
+          ),
+        );
+        
+   
+  }
+}

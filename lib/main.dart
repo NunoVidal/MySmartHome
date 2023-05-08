@@ -16,8 +16,8 @@ void main() {
   Map<DateTime, double> values = {};
   final random = Random();
 
-  final startDate = DateTime(2022, 05, 10, 0, 0, 0);
-  final endDate = DateTime(2022, 05, 20, 23, 50, 0);
+  final startDate = DateTime(2023, 05, 02, 0, 0, 0);
+  final endDate = DateTime(2023, 05, 20, 23, 50, 0);
 
   final difference = endDate.difference(startDate).inMinutes;
   final numberOfIntervals = (difference / 5).ceil();
