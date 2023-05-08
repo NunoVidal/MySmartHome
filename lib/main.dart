@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_home_app/devices.dart';
+import 'package:smart_home_app/blind.dart';
 import 'package:smart_home_app/light.dart';
 import 'package:smart_home_app/my_devices.dart';
 
@@ -28,9 +29,12 @@ class MyApp extends StatelessWidget {
         '/': (context) => const MyHomePage(),
         '/device_list_Lighting': (context) =>
             const DeviceList(type: "lighting"),
+        '/device_list_Blindings': (context) =>
+            const DeviceList(type: "blind"),
         '/device_list_Sensors': (context) =>
             const DeviceList(type: "Sensor"),
         '/light': (context) => const LightState(),
+        '/blind': (context) => const BlindState(),
       },
     );
   }

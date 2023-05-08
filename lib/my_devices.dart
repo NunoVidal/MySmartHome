@@ -11,8 +11,8 @@ List<Lamp> lamps = [
 
 List<Blind> blinds = [
   Blind("Living Room", 0, 0,"0"),
-  Blind("Jon's Bedroom", 1, 0,"0"),
-  Blind("Office",1,0,"0")
+  Blind("Jon's Bedroom", 1, 25,"0"),
+  Blind("Office",2,50,"0")
 ];
 
 //to do for blinds

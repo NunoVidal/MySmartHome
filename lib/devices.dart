@@ -30,22 +30,29 @@ class LampProgram {
       this.color, this.state, this.timer, this.date, this.time, this.repeat);
 }
 
-// todo:
-
 class Blind {
   String name = "";
   int id = 0;
-  int state = 0;
+  double state = 0;
   String timer = "";
+  List <BlindProgram> schedule = [];
 
-  Blind(this.name, this.id, this.state,this.timer);
+  Blind(this.name, this.id, this.state, this.timer);
 
-  //defineState()
+  addProgram(BlindProgram program){
+    schedule.add(program);
+  }
 
 }
 
 class BlindProgram{
+  double state = 0;
+  String timer = "";
+  String date = "";
+  String time = "";
+  String repeat = "";
 
+  BlindProgram(this.state, this.timer, this.date, this.time, this.repeat);
 }
 
 class Sensor {
