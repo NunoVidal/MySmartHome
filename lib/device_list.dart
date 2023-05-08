@@ -43,10 +43,33 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    
-    } 
-    
-     else if (super.widget.type == "Sensor"){
+    } else if (super.widget.type == "blind") {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Blindings'),
+          leading: BackButton(
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              for (var i = 0; i < blinds.length; i++)
+                DeviceElevatedCard(
+                  name: blinds[i].name,
+                  id: blinds[i].id,
+                  deviceType: "blind",
+                  updateParent: refresh,
+                )
+            ],
+          ),
+        ),
+        drawer: const NavBar(),
+      );
+    } else if (super.widget.type == "Sensor") {
       return Scaffold(
         appBar: AppBar(
           leading: BackButton(
@@ -59,9 +82,6 @@ class _DeviceListState extends State<DeviceList> {
               const SizedBox(
                 height: 10,
               ),
-              //for (var i = 0; i < blinds.length; i++){
-              //  DeviceElevatedCard(name: blinds[i].name, id: blinds[i].id)
-              //}
               for (var i = 0; i < sensores.length; i++)
                 DeviceElevatedCard(
                   name: sensores[i].name,
@@ -74,7 +94,7 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    }else{
+    } else {
       return const Scaffold();
     }
   }
