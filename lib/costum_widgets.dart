@@ -107,6 +107,33 @@ class DeviceElevatedCard extends StatelessWidget {
               .then((result) => updateParent());
         },
       ));
+    } else if (deviceType == "blind") {
+      return Center(
+          child: GestureDetector(
+        child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: Text(name),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    const Icon(Icons.arrow_forward)
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        onTap: () {
+          Navigator.pushNamed(context, '/blind', arguments: id)
+              .then((result) => updateParent());
+        },
+      ));
     } else if (deviceType == "sensor") {
       return Center(
           child: GestureDetector(
@@ -822,6 +849,367 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
         ),
       ],
     );
+  }
+}
+
+class BlindConfig extends StatefulWidget {
+  final int deviceId;
+  final double initialValue;
+  const BlindConfig(
+      {super.key, required this.deviceId, required this.initialValue});
+
+  @override
+  State<BlindConfig> createState() => _BlindConfigState();
+}
+
+class _BlindConfigState extends State<BlindConfig> {
+  double _value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialValue != null) {
+      _value = widget.initialValue;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.only(bottom: 30.0, top: 10.0),
+        child: Column(children: [
+          Row(
+            children: const [
+              Icon(Icons.color_lens_outlined),
+              Text(' State'),
+            ],
+          ),
+          SingleChildScrollView(
+            child: Center(
+              child: SizedBox(
+                height: 300.0,
+                width: 300.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Aberto'),
+                    Transform.rotate(
+                      angle: 1.5708, // 90 degrees in radians
+                      child: Slider(
+                        value: _value,
+                        min: 0.0,
+                        max: 100.0,
+                        divisions: 20,
+                        label: '${_value.round()}',
+                        onChanged: (double value) {
+                          setState(() {
+                            _value = value;
+                            //blinds[BlindId].state = value;
+                          });
+                        },
+                        activeColor: Colors.blue,
+                        inactiveColor: Colors.grey,
+                      ),
+                    ),
+                    Text('Fechado'),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ]));
+  }
+}
+
+class BlindProgramShceduleModal extends StatefulWidget {
+  final int deviceId;
+  final Function? updateParent;
+  const BlindProgramShceduleModal(
+      {Key? key, required this.deviceId, this.updateParent})
+      : super(key: key);
+
+  @override
+  State<BlindProgramShceduleModal> createState() =>
+      _BlindProgramShceduleModalState();
+}
+
+class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
+  TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  String selectedRepeat = '0';
+  String selectedRepeatUnit = 'days';
+  String selectedTimer = '0:0';
+
+  double selectedState = 0.0;
+  bool dateCheck = false;
+  bool timeCheck = false;
+
+  var selectN = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+  ];
+  var selectUnit = ['days', 'weeks', 'months'];
+  @override
+  Widget build(BuildContext context) {
+    var lightId = widget.deviceId;
+
+    return AlertDialog(
+      title: const Text('Scheduler'),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            CostumActionExplicitBlindConfig(
+              deviceId: lightId,
+              colorChangeAction: (color) {
+                setState(() => selectedState = 0);
+              },
+              timerChangeAction: (hours, minutes) {
+                setState(() => selectedTimer = '$hours:$minutes');
+              },
+            ),
+            const Divider(color: Colors.black),
+            Row(
+              children: const [
+                Icon(Icons.repeat),
+                Text(' Repeat'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Every  "),
+                DropdownButton<String>(
+                  // Initial Value
+                  value: selectedRepeat,
+
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+
+                  // Array list of items
+                  items: selectN.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedRepeat = newValue!;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                DropdownButton<String>(
+                  // Initial Value
+                  value: selectedRepeatUnit,
+
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+
+                  // Array list of items
+                  items: selectUnit.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedRepeatUnit = newValue!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const Divider(color: Colors.black),
+            Row(
+              children: const [
+                Icon(Icons.calendar_today),
+                Text(' Date / Hour'),
+              ],
+            ),
+            Container(
+                padding: const EdgeInsets.all(15),
+                height: 100,
+                child: Center(
+                    child: TextField(
+                  controller:
+                      dateController, //editing controller of this TextField
+                  decoration: const InputDecoration(
+                      icon: Icon(Icons.edit_calendar), //icon of text field
+                      labelText: "Enter Date" //label text of field
+                      ),
+                  readOnly: true, // when true user cannot edit text
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(), //get today's date
+                        firstDate: DateTime
+                            .now(), //not to allow to choose before today.
+                        lastDate: DateTime(2101));
+
+                    if (pickedDate != null) {
+                      String formattedDate = DateFormat('yyyy-MM-dd').format(
+                          pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+
+                      setState(() {
+                        dateController.text = formattedDate;
+                        dateCheck = true;
+                        debugPrint((dateCheck).toString());
+                      });
+                    }
+                  },
+                ))),
+            Container(
+                padding: const EdgeInsets.all(15),
+                height: 100,
+                child: Center(
+                    child: TextField(
+                  controller:
+                      timeController, //editing controller of this TextField
+                  decoration: const InputDecoration(
+                      icon:
+                          Icon(Icons.access_time_rounded), //icon of text field
+                      labelText: "Enter Hour" //label text of field
+                      ),
+                  readOnly: true, // when true user cannot edit text
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      initialTime: TimeOfDay.now(),
+                      context: context,
+                    );
+
+                    if (pickedTime != null && pickedTime != TimeOfDay.now()) {
+                      final now = DateTime.now();
+                      final selectedDateTime = DateTime(now.year, now.month,
+                          now.day, pickedTime.hour, pickedTime.minute);
+                      if (selectedDateTime.isAfter(now)) {
+                        setState(() {
+                          timeController.text = pickedTime.format(context);
+                          timeCheck = true;
+                        });
+                      } else {
+                        setState(() {
+                          timeCheck = false;
+                          timeController.text = 'Invalid time';
+                        });
+                      }
+                    }
+                  },
+                ))),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        ElevatedButton(
+          child: const Text('Schedule'),
+          onPressed: timeCheck && dateCheck
+              ? () {
+                  blinds[widget.deviceId].schedule.add(BlindProgram(
+                      selectedState,
+                      selectedTimer == '0:0' ? 'no' : selectedTimer,
+                      dateController.text,
+                      timeController.text,
+                      selectedRepeat != '0'
+                          ? "$selectedRepeat $selectedRepeatUnit"
+                          : 'no'));
+                  widget.updateParent!();
+                  Navigator.of(context).pop();
+                }
+              : null,
+        ),
+      ],
+    );
+  }
+}
+
+class CostumActionExplicitBlindConfig extends StatefulWidget {
+  final int deviceId;
+  final Function colorChangeAction;
+  final Function timerChangeAction;
+  const CostumActionExplicitBlindConfig(
+      {super.key,
+      required this.deviceId,
+      required this.colorChangeAction,
+      required this.timerChangeAction});
+
+  @override
+  State<CostumActionExplicitBlindConfig> createState() =>
+      _CostumActionExplicitBlindConfigState();
+}
+
+class _CostumActionExplicitBlindConfigState
+    extends State<CostumActionExplicitBlindConfig> {
+  double _value = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.only(bottom: 30.0, top: 0.0),
+        child: Column(children: [
+          Row(
+            children: const [
+              Icon(Icons.blinds),
+              Text(' State'),
+            ],
+          ),
+          SingleChildScrollView(
+            child: Center(
+              child: SizedBox(
+                height: 300.0,
+                width: 300.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Aberto'),
+                    Transform.rotate(
+                      angle: 1.5708, // 90 degrees in radians
+                      child: Slider(
+                          value: _value,
+                          min: 0.0,
+                          max: 100.0,
+                          divisions: 20,
+                          label: '${_value.round()}',
+                          onChanged: (double value) {
+                            setState(() {
+                              _value = value;
+                            });
+                          },
+                          activeColor: Colors.blue,
+                          inactiveColor: Colors.grey),
+                    ),
+                    Text('Fechado'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Divider(color: Colors.black),
+          Row(
+            children: const [
+              Icon(Icons.timer_outlined),
+              Text(' Timer'),
+            ],
+          ),
+          TimerPicker(
+            externalAction: widget.timerChangeAction,
+            deviceId: widget.deviceId,
+            initWithDevice: false,
+          )
+        ]));
   }
 }
 
