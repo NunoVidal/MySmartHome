@@ -17,8 +17,6 @@ List<Blind> blinds = [
 
 //to do for blinds
 
-
 List<Sensor> sensores = [
-  Sensor("Greenhouse Humidity sensor", "Humidity sensor","Zigbee","%")
+  Sensor("Greenhouse Humidity sensor", "Humidity sensor", "Zigbee", "%")
 ];
-

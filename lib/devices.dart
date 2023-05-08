@@ -60,13 +60,14 @@ class Sensor {
   String name = "";
   String category = "";
   int dataGatherInterval = 5; //in minutes
-  double currentVal = 0.0; 
+  double currentVal = 0.0;
   String protocol;
   String unit = "";
-  Map<DateTime,double> history = {};
+  Map<DateTime, double> history = {};
 
-  Sensor(this.name,this.category,this.protocol,this.unit);
+  Sensor(this.name, this.category, this.protocol, this.unit);
 
-
-
+  createHistory(Map<DateTime, double> hist) {
+    history = hist;
+  }
 }

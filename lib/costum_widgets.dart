@@ -79,8 +79,7 @@ class DeviceElevatedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (deviceType == 'light')
-    {
+    if (deviceType == 'light') {
       return Center(
           child: GestureDetector(
         child: Card(
@@ -146,8 +145,9 @@ class DeviceElevatedCard extends StatelessWidget {
                 title: Text(name),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children:  [
-                    Text("${sensores[id].currentVal.toString()} ${sensores[id].unit}"),
+                  children: [
+                    Text(
+                        "${sensores[id].currentVal.toString()} ${sensores[id].unit}"),
                     const SizedBox(
                       width: 30,
                     ),
@@ -163,7 +163,7 @@ class DeviceElevatedCard extends StatelessWidget {
               .then((result) => updateParent());
         },
       ));
-    }else{
+    } else {
       return Center(child: GestureDetector());
     }
   }
@@ -598,18 +598,20 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
   bool dateCheck = false;
   bool timeCheck = false;
 
-  var selectN = [
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
   var selectUnit = ['days', 'weeks', 'months'];
+
+  DateTime gPickedDate = DateTime.now();
+  int gSelectedHour = -1;
+  int gSelectedMinute = -1;
+
   @override
   Widget build(BuildContext context) {
     var lightId = widget.deviceId;
+    var selectN = ['0'];
+
+    for (int i = 1; i <= 30; i++) {
+      selectN.add(i.toString());
+    }
 
     return AlertDialog(
       title: const Text('Scheduler'),
@@ -727,12 +729,40 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
                     if (pickedDate != null) {
                       String formattedDate = DateFormat('yyyy-MM-dd').format(
                           pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                      if (gSelectedHour != -1 && gSelectedMinute != -1) {
+                        final selectedDateTime = DateTime(
+                            pickedDate.year,
+                            pickedDate.month,
+                            pickedDate.day,
+                            gSelectedHour,
+                            gSelectedMinute);
 
-                      setState(() {
-                        dateController.text = formattedDate;
-                        dateCheck = true;
-                        debugPrint((dateCheck).toString());
-                      });
+                        if (selectedDateTime.isAfter(DateTime.now())) {
+                          setState(() {
+                            gPickedDate = pickedDate;
+                            dateController.text = formattedDate;
+                            dateCheck = true;
+                            debugPrint((dateCheck).toString());
+                          });
+                        } else {
+                          setState(() {
+                            dateCheck = false;
+                            dateController.text =
+                                'Invalid date for selected time';
+                          });
+                        }
+                      } else {
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        debugPrint('aqui');
+                        debugPrint(gSelectedHour.toString());
+                        debugPrint(gSelectedMinute.toString());
+                        setState(() {
+                          gPickedDate = pickedDate;
+                          dateController.text = formattedDate;
+                          dateCheck = true;
+                        });
+                      }
                     }
                   },
                 ))),
@@ -755,15 +785,24 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
                       context: context,
                     );
 
-                    if (pickedTime != null && pickedTime != TimeOfDay.now()) {
+                    if (pickedTime != null) {
                       final now = DateTime.now();
-                      final selectedDateTime = DateTime(now.year, now.month,
-                          now.day, pickedTime.hour, pickedTime.minute);
-                      if (selectedDateTime.isAfter(now)) {
+
+                      final selectedDateTime = DateTime(
+                          gPickedDate.year,
+                          gPickedDate.month,
+                          gPickedDate.day,
+                          pickedTime.hour,
+                          pickedTime.minute);
+
+                      if (selectedDateTime.isAfter(now) || !dateCheck) {
                         setState(() {
                           timeController.text = pickedTime.format(context);
                           timeCheck = true;
+                          gSelectedHour = pickedTime.hour;
+                          gSelectedMinute = pickedTime.minute;
                         });
+                        debugPrint(gSelectedHour.toString());
                       } else {
                         setState(() {
                           timeCheck = false;
@@ -778,7 +817,6 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
       ),
       actions: <Widget>[
         ElevatedButton(
-          child: const Text('Schedule'),
           onPressed: timeCheck && dateCheck
               ? () {
                   lamps[widget.deviceId].schedule.add(LampProgram(
@@ -792,8 +830,21 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
                           : 'no'));
                   widget.updateParent!();
                   Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Program successfully added!'),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () {
+                          lamps[widget.deviceId].schedule.removeLast();
+                          widget.updateParent!();
+                        },
+                      ),
+                    ),
+                  );
                 }
               : null,
+          child: const Text('Schedule'),
         ),
       ],
     );
