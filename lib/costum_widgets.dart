@@ -124,7 +124,8 @@ class DeviceElevatedCard extends StatelessWidget {
                     const SizedBox(
                       width: 30,
                     ),
-                    const Icon(Icons.query_stats)
+                    const Icon(Icons.query_stats),
+                    const PopupMenu(),
                   ],
                 ),
               )
@@ -212,12 +213,12 @@ class _PopupMenuState extends State<PopupMenu> {
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
         const PopupMenuItem<SampleItem>(
-          value: SampleItem.delete,
-          child: Text('delete'),
+          value: SampleItem.moreInfo,
+          child: Text('Settings'),
         ),
         const PopupMenuItem<SampleItem>(
-          value: SampleItem.moreInfo,
-          child: Text('info'),
+          value: SampleItem.delete,
+          child: Text('Delete'),
         ),
       ],
     );
@@ -817,6 +818,54 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
                   );
                 }
               : null,
+          child: const Text('Schedule'),
+        ),
+      ],
+    );
+  }
+}
+
+class SensorSettingsModal extends StatefulWidget {
+  const SensorSettingsModal({super.key});
+
+  @override
+  State<SensorSettingsModal> createState() => _SensorSettingsModalState();
+}
+
+class _SensorSettingsModalState extends State<SensorSettingsModal> {
+  bool selectedState = false;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Settings'),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(children: const [Icon(Icons.sensors), Text('State')]),
+                CostumActionSwitch(
+                  action: (value) {
+                    setState(() => selectedState = value);
+                  },
+                ),
+              ],
+            ),
+            const Divider(color: Colors.black),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Settings modified successfully!'),
+              ),
+            );
+          },
           child: const Text('Schedule'),
         ),
       ],
