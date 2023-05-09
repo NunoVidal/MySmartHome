@@ -939,7 +939,6 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
   TextEditingController timeController = TextEditingController();
   String selectedRepeat = '0';
   String selectedRepeatUnit = 'days';
-  String selectedTimer = '0:0';
   
   double selectedState = 0.0;
   bool dateCheck = false;
@@ -967,9 +966,6 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
               deviceId: lightId,
               colorChangeAction: (color) {
                 setState(() => selectedState = 0);
-              },
-              timerChangeAction: (hours, minutes) {
-                setState(() => selectedTimer = '$hours:$minutes');
               },
             ),
             const Divider(color: Colors.black),
@@ -1118,7 +1114,6 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
               ? () {
                   blinds[widget.deviceId].schedule.add(BlindProgram(
                       selectedState,
-                      selectedTimer == '0:0' ? 'no' : selectedTimer,
                       dateController.text,
                       timeController.text,
                       selectedRepeat != '0'
@@ -1137,12 +1132,10 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
 class CostumActionExplicitBlindConfig extends StatefulWidget {
   final int deviceId;
   final Function colorChangeAction;
-  final Function timerChangeAction;
   const CostumActionExplicitBlindConfig(
       {super.key,
       required this.deviceId,
-      required this.colorChangeAction,
-      required this.timerChangeAction});
+      required this.colorChangeAction});
 
   @override
   State<CostumActionExplicitBlindConfig> createState() =>
@@ -1201,18 +1194,6 @@ class _CostumActionExplicitBlindConfigState
           const SizedBox(
             height: 20,
           ),
-          const Divider(color: Colors.black),
-          Row(
-            children: const [
-              Icon(Icons.timer_outlined),
-              Text(' Timer'),
-            ],
-          ),
-          TimerPicker(
-            externalAction: widget.timerChangeAction,
-            deviceId: widget.deviceId,
-            initWithDevice: false,
-          )
         ]));
   }
 }
