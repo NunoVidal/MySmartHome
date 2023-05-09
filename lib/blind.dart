@@ -96,11 +96,6 @@ class _BlindState extends State<BlindState>
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  const Icon(Icons.timer),
-                                  Text(blinds[BlindId]
-                                      .schedule[i]
-                                      .timer
-                                      .toString())
                                 ]),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,

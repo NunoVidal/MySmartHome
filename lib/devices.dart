@@ -34,10 +34,9 @@ class Blind {
   String name = "";
   int id = 0;
   double state = 0;
-  String timer = "";
   List <BlindProgram> schedule = [];
 
-  Blind(this.name, this.id, this.state, this.timer);
+  Blind(this.name, this.id, this.state);
 
   addProgram(BlindProgram program){
     schedule.add(program);
@@ -47,12 +46,11 @@ class Blind {
 
 class BlindProgram{
   double state = 0;
-  String timer = "";
   String date = "";
   String time = "";
   String repeat = "";
 
-  BlindProgram(this.state, this.timer, this.date, this.time, this.repeat);
+  BlindProgram(this.state, this.date, this.time, this.repeat);
 }
 
 class Sensor {
