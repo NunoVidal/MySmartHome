@@ -922,12 +922,7 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
   TextEditingController timeController = TextEditingController();
   String selectedRepeat = '0';
   String selectedRepeatUnit = 'days';
-<<<<<<< HEAD
   
-=======
-  String selectedTimer = '0:0';
-
->>>>>>> ef928960d837fa4945d608385c10729307ecf877
   double selectedState = 0.0;
   bool dateCheck = false;
   bool timeCheck = false;
