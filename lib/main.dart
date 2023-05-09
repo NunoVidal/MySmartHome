@@ -29,6 +29,7 @@ void main() {
     values[currentDate] = randomDouble;
   }
 
+  values[DateTime(2023, 5, 10, 11, 0, 0)] = 77.5;
   sensores[0].createHistory(values);
   runApp(const MyApp());
 }

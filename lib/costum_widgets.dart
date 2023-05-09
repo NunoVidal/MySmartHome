@@ -1288,10 +1288,10 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
                               time.minute);
                         });
                         widget.onDateChanged(selectedDate);
+                        dateController.text =
+                            "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
                       }
                     });
-                    dateController.text =
-                        "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
                   }
                 });
               })
@@ -1337,7 +1337,7 @@ class _DataTableFilterState extends State<DataTableFilter> {
       return DataRow(
         cells: [
           DataCell(Text(data.key.toString())),
-          DataCell(Text(data.value.toString())),
+          DataCell(Text(data.value.toStringAsFixed(2))),
         ],
       );
     }).toList();
