@@ -107,7 +107,7 @@ class DeviceElevatedCard extends StatelessWidget {
               .then((result) => updateParent());
         },
       ));
-    }else if (deviceType == "blind"){
+    } else if (deviceType == "blind") {
       return Center(
           child: GestureDetector(
         child: Card(
@@ -118,7 +118,7 @@ class DeviceElevatedCard extends StatelessWidget {
                 title: Text(name),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children:  [
+                  children: [
                     const SizedBox(
                       width: 30,
                     ),
@@ -134,7 +134,7 @@ class DeviceElevatedCard extends StatelessWidget {
               .then((result) => updateParent());
         },
       ));
-    }else if (deviceType == "sensor"){
+    } else if (deviceType == "sensor") {
       return Center(
           child: GestureDetector(
         child: Card(
@@ -151,7 +151,8 @@ class DeviceElevatedCard extends StatelessWidget {
                     const SizedBox(
                       width: 30,
                     ),
-                    const Icon(Icons.query_stats)
+                    const Icon(Icons.query_stats),
+                    const PopupMenu(),
                   ],
                 ),
               )
@@ -239,12 +240,12 @@ class _PopupMenuState extends State<PopupMenu> {
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
         const PopupMenuItem<SampleItem>(
-          value: SampleItem.delete,
-          child: Text('delete'),
+          value: SampleItem.moreInfo,
+          child: Text('Settings'),
         ),
         const PopupMenuItem<SampleItem>(
-          value: SampleItem.moreInfo,
-          child: Text('info'),
+          value: SampleItem.delete,
+          child: Text('Delete'),
         ),
       ],
     );
@@ -436,22 +437,6 @@ class _ExplicitLightConfigState extends State<ExplicitLightConfig> {
             pickerColor: pickerColor,
             onColorChanged: changeColor,
           ),
-          const Divider(color: Colors.black),
-          Row(
-            children: const [
-              Icon(Icons.timer_outlined),
-              Text(' Timer'),
-            ],
-          ),
-          TimerPicker(
-            externalAction: (hours, minutes) {
-              lamps[widget.deviceId].timer = '$hours:$minutes';
-              lamps[widget.deviceId].timerMinutes = minutes;
-              lamps[widget.deviceId].timerHours = hours;
-            },
-            deviceId: widget.deviceId,
-            initWithDevice: true,
-          )
         ]));
   }
 }
@@ -854,14 +839,14 @@ class _LightProgramShceduleModalState extends State<LightProgramShceduleModal> {
 class BlindConfig extends StatefulWidget {
   final int deviceId;
   final double initialValue;
-  const BlindConfig({super.key, required this.deviceId, required this.initialValue});
+  const BlindConfig(
+      {super.key, required this.deviceId, required this.initialValue});
 
   @override
   State<BlindConfig> createState() => _BlindConfigState();
 }
 
 class _BlindConfigState extends State<BlindConfig> {
-
   double _value = 0;
 
   @override
@@ -908,7 +893,6 @@ class _BlindConfigState extends State<BlindConfig> {
                         },
                         activeColor: Colors.blue,
                         inactiveColor: Colors.grey,
-                        
                       ),
                     ),
                     Text('Fechado'),
@@ -920,7 +904,6 @@ class _BlindConfigState extends State<BlindConfig> {
         ]));
   }
 }
-
 
 class BlindProgramShceduleModal extends StatefulWidget {
   final int deviceId;
@@ -939,7 +922,12 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
   TextEditingController timeController = TextEditingController();
   String selectedRepeat = '0';
   String selectedRepeatUnit = 'days';
+<<<<<<< HEAD
   
+=======
+  String selectedTimer = '0:0';
+
+>>>>>>> ef928960d837fa4945d608385c10729307ecf877
   double selectedState = 0.0;
   bool dateCheck = false;
   bool timeCheck = false;
@@ -1144,8 +1132,7 @@ class CostumActionExplicitBlindConfig extends StatefulWidget {
 
 class _CostumActionExplicitBlindConfigState
     extends State<CostumActionExplicitBlindConfig> {
-
-      double _value = 0.0;
+  double _value = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -1159,41 +1146,165 @@ class _CostumActionExplicitBlindConfigState
             ],
           ),
           SingleChildScrollView(
-          child: Center(
-            child: SizedBox(
-              height: 300.0,
-              width: 300.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Aberto'),
-                  Transform.rotate(
-                    angle: 1.5708, // 90 degrees in radians
-                    child: Slider(
-                      value: _value,
-                      min: 0.0,
-                      max: 100.0,
-                      divisions: 20,
-                      label: '${_value.round()}',
-                      onChanged: (double value) {
-                        setState(() {
-                          _value = value;
-                        });
-                      },
-                      activeColor: Colors.blue,
-                      inactiveColor: Colors.grey
+            child: Center(
+              child: SizedBox(
+                height: 300.0,
+                width: 300.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Aberto'),
+                    Transform.rotate(
+                      angle: 1.5708, // 90 degrees in radians
+                      child: Slider(
+                          value: _value,
+                          min: 0.0,
+                          max: 100.0,
+                          divisions: 20,
+                          label: '${_value.round()}',
+                          onChanged: (double value) {
+                            setState(() {
+                              _value = value;
+                            });
+                          },
+                          activeColor: Colors.blue,
+                          inactiveColor: Colors.grey),
                     ),
-                  ),
-                  Text('Fechado'),
-                ],
+                    Text('Fechado'),
+                  ],
+                ),
               ),
             ),
           ),
-          ),
-          
           const SizedBox(
             height: 20,
           ),
         ]));
+  }
+}
+
+class SensorSettingsModal extends StatefulWidget {
+  const SensorSettingsModal({super.key});
+
+  @override
+  State<SensorSettingsModal> createState() => _SensorSettingsModalState();
+}
+
+class _SensorSettingsModalState extends State<SensorSettingsModal> {
+  bool selectedState = false;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Settings'),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(children: const [Icon(Icons.sensors), Text('State')]),
+                CostumActionSwitch(
+                  action: (value) {
+                    setState(() => selectedState = value);
+                  },
+                ),
+              ],
+            ),
+            const Divider(color: Colors.black),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Settings modified successfully!'),
+              ),
+            );
+          },
+          child: const Text('Schedule'),
+        ),
+      ],
+    );
+  }
+}
+
+class MyDateTimePicker extends StatefulWidget {
+  final String label;
+  final DateTime defaultValue;
+  const MyDateTimePicker(
+      {super.key, required this.label, required this.defaultValue});
+
+  @override
+  _MyDateTimePickerState createState() =>
+      _MyDateTimePickerState(label, defaultValue);
+}
+
+class _MyDateTimePickerState extends State<MyDateTimePicker> {
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+  TextEditingController dateController = TextEditingController();
+
+  String label = "Enter Date";
+
+  _MyDateTimePickerState(this.label, this.selectedDate);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      height: 100,
+      width: 200,
+      child: Center(
+          child: TextField(
+              controller: dateController, //editing controller of this TextField
+              decoration: InputDecoration(
+                icon: const Icon(Icons.calendar_today), //icon of text field
+                labelText: label, //label text of field
+              ),
+              readOnly: true, // when true user cannot edit text
+              onTap: () async {
+                showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2021),
+                        lastDate: DateTime(2025))
+                    .then((date) {
+                  if (date != null) {
+                    setState(() {
+                      selectedDate = date;
+                    });
+
+                    showTimePicker(
+                      context: context,
+                      initialTime: selectedTime,
+                    ).then((time) {
+                      if (time != null) {
+                        setState(() {
+                          selectedDate = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              time.hour,
+                              time.minute);
+                        });
+                      }
+                    });
+                    dateController.text =
+                        "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
+                  }
+                });
+              })
+
+          /*ElevatedButton(
+              child: Text("${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedTime.hour}:${selectedTime.minute}"),
+              onPressed: () {
+                
+              },
+            ),*/
+          ),
+    );
   }
 }

@@ -17,8 +17,8 @@ void main() {
   Map<DateTime, double> values = {};
   final random = Random();
 
-  final startDate = DateTime(2022, 05, 10, 0, 0, 0);
-  final endDate = DateTime(2022, 05, 20, 23, 50, 0);
+  final startDate = DateTime(2023, 05, 02, 0, 0, 0);
+  final endDate = DateTime(2023, 05, 20, 23, 50, 0);
 
   final difference = endDate.difference(startDate).inMinutes;
   final numberOfIntervals = (difference / 5).ceil();
@@ -49,12 +49,11 @@ class MyApp extends StatelessWidget {
         '/': (context) => const MyHomePage(),
         '/device_list_Lighting': (context) =>
             const DeviceList(type: "lighting"),
-        '/device_list_Blindings': (context) =>
-            const DeviceList(type: "blind"),
-        '/device_list_Sensors': (context) =>
-            const DeviceList(type: "Sensor"),
+        '/device_list_Blindings': (context) => const DeviceList(type: "blind"),
+        '/device_list_Sensors': (context) => const DeviceList(type: "Sensor"),
         '/light': (context) => const LightState(),
         '/blind': (context) => const BlindState(),
+        "/sensor": (context) => const SensorState(),
       },
     );
   }

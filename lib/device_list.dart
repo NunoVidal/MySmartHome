@@ -43,10 +43,7 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    
-    }
-
-    else if (super.widget.type == "blind"){
+    } else if (super.widget.type == "blind") {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Blindings'),
@@ -72,10 +69,7 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    } 
-
-    
-     else if (super.widget.type == "Sensor"){
+    } else if (super.widget.type == "Sensor") {
       return Scaffold(
         appBar: AppBar(
           leading: BackButton(
@@ -100,7 +94,7 @@ class _DeviceListState extends State<DeviceList> {
         ),
         drawer: const NavBar(),
       );
-    }else{
+    } else {
       return const Scaffold();
     }
   }
