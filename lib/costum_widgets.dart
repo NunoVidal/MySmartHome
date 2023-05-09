@@ -1261,78 +1261,175 @@ class _SensorSettingsModalState extends State<SensorSettingsModal> {
   }
 }
 
-
-
 class MyDateTimePicker extends StatefulWidget {
   final String label;
   final DateTime defaultValue;
-  const MyDateTimePicker({super.key, required this.label,required this.defaultValue});
-  
+  final Function(DateTime) onDateChanged;
+  const MyDateTimePicker(
+      {super.key,
+      required this.label,
+      required this.defaultValue,
+      required this.onDateChanged});
+
   @override
-  _MyDateTimePickerState createState() => _MyDateTimePickerState(label,defaultValue);
+  _MyDateTimePickerState createState() =>
+      _MyDateTimePickerState(label, defaultValue);
 }
 
 class _MyDateTimePickerState extends State<MyDateTimePicker> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController dateController = TextEditingController();
-  
+
   String label = "Enter Date";
 
-  _MyDateTimePickerState(this.label,this.selectedDate);
-
+  _MyDateTimePickerState(this.label, this.selectedDate);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-            padding: const EdgeInsets.all(15),
-            height: 100,
-            width: 200,
-            child: Center(
-              child: TextField(
-                  controller: dateController, //editing controller of this TextField
-                    decoration:  InputDecoration( 
-                              icon: const Icon(Icons.calendar_today), //icon of text field
-                            labelText: label, //label text of field
-                      ),
-                    readOnly: true,  // when true user cannot edit text 
-                    onTap: () async {
-                           showDatePicker(
-                          context: context,
-                          initialDate: selectedDate,
-                          firstDate: DateTime(2021),
-                          lastDate: DateTime(2025)
-                        ).then((date) {
-                            if (date != null) {
-                              setState(() {
-                                selectedDate = date;
-                              });
+      padding: const EdgeInsets.all(15),
+      height: 100,
+      width: 200,
+      child: Center(
+          child: TextField(
+              controller: dateController, //editing controller of this TextField
+              decoration: InputDecoration(
+                icon: const Icon(Icons.calendar_today), //icon of text field
+                labelText: label, //label text of field
+              ),
+              readOnly: true, // when true user cannot edit text
+              onTap: () async {
+                showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2021),
+                        lastDate: DateTime(2025))
+                    .then((date) {
+                  if (date != null) {
+                    setState(() {
+                      selectedDate = date;
+                    });
 
-                              showTimePicker(
-                                context: context,
-                                initialTime: selectedTime,
-                              ).then((time) {
-                                if (time != null) {
-                                  setState(() {
-                                    selectedDate = DateTime(selectedDate.year,selectedDate.month,selectedDate.day,time.hour,time.minute);
-                                  });
-                                }
-                              });
-                              dateController.text = "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
-                            }
+                    showTimePicker(
+                      context: context,
+                      initialTime: selectedTime,
+                    ).then((time) {
+                      if (time != null) {
+                        setState(() {
+                          selectedDate = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              time.hour,
+                              time.minute);
                         });
+                        widget.onDateChanged(selectedDate);
                       }
-            )
-            
-             /*ElevatedButton(
+                    });
+                    dateController.text =
+                        "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
+                  }
+                });
+              })
+
+          /*ElevatedButton(
               child: Text("${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedTime.hour}:${selectedTime.minute}"),
               onPressed: () {
                 
               },
             ),*/
           ),
-        );
-        
-   
+    );
+  }
+}
+
+class DataTableFilter extends StatefulWidget {
+  final DateTime initialDate;
+  final DateTime finalDate;
+  final List<MapEntry<DateTime, double>> data;
+
+  DataTableFilter(
+      {required this.initialDate, required this.finalDate, required this.data});
+
+  @override
+  _DataTableFilterState createState() => _DataTableFilterState();
+}
+
+class _DataTableFilterState extends State<DataTableFilter> {
+  List<DataRow> rows = [];
+  DateTime InitialDate = DateTime.now();
+  DateTime FinalDate = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    _filterData(widget.initialDate, widget.finalDate);
+  }
+
+  void _filterData(DateTime initialDate, DateTime endDate) {
+    rows.clear();
+    List<DataRow> filteredRows = widget.data.where((data) {
+      return data.key.isAfter(initialDate) && data.key.isBefore(endDate);
+    }).map((data) {
+      return DataRow(
+        cells: [
+          DataCell(Text(data.key.toString())),
+          DataCell(Text(data.value.toString())),
+        ],
+      );
+    }).toList();
+
+    filteredRows.forEach((element) {
+      rows.add(element);
+    });
+    FinalDate = endDate;
+    InitialDate = initialDate;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        child: Column(children: [
+      Row(children: [
+        MyDateTimePicker(
+          label: 'From',
+          defaultValue: widget.initialDate,
+          onDateChanged: _onDateChangedInitial,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        MyDateTimePicker(
+          label: "To",
+          defaultValue: widget.finalDate,
+          onDateChanged: _onDateChangedFinal,
+        ),
+      ]),
+      const SizedBox(
+        height: 20,
+      ),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: const [
+            DataColumn(label: Text('DateTime')),
+            DataColumn(label: Text('Humidity (%)')),
+          ],
+          rows: rows,
+        ),
+      ),
+    ]));
+  }
+
+  void _onDateChangedInitial(DateTime initDate) {
+    setState(() {
+      _filterData(initDate, FinalDate);
+    });
+  }
+
+  void _onDateChangedFinal(DateTime endDate) {
+    setState(() {
+      _filterData(InitialDate, endDate);
+    });
   }
 }
