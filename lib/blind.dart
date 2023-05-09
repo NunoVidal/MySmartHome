@@ -105,7 +105,8 @@ class _BlindState extends State<BlindState>
                                     const SizedBox(
                                       width: 10,
                                     ),
-                                    
+                                    Text('${blinds[BlindId].schedule[i].state.toInt()}%',
+                                        style: TextStyle(fontSize: 25)),
                                     const SizedBox(
                                       width: 10,
                                     ),

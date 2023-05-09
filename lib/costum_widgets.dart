@@ -122,6 +122,7 @@ class DeviceElevatedCard extends StatelessWidget {
                     const SizedBox(
                       width: 30,
                     ),
+                    const PopupMenu(),
                     const Icon(Icons.arrow_forward)
                   ],
                 ),
@@ -864,7 +865,7 @@ class _BlindConfigState extends State<BlindConfig> {
         child: Column(children: [
           Row(
             children: const [
-              Icon(Icons.color_lens_outlined),
+              Icon(Icons.blinds),
               Text(' State'),
             ],
           ),
@@ -888,7 +889,13 @@ class _BlindConfigState extends State<BlindConfig> {
                         onChanged: (double value) {
                           setState(() {
                             _value = value;
-                            //blinds[BlindId].state = value;
+                            final int deviceId = widget.deviceId;
+                            final Blind blind = blinds.firstWhere(
+                              (blind) => blind.id == deviceId
+                            );
+                            if (blind != null) {
+                              blind.state = value;
+                            }
                           });
                         },
                         activeColor: Colors.blue,
@@ -922,23 +929,24 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
   TextEditingController timeController = TextEditingController();
   String selectedRepeat = '0';
   String selectedRepeatUnit = 'days';
-  
-  double selectedState = 0.0;
+  double selectedState = 0;
   bool dateCheck = false;
   bool timeCheck = false;
 
-  var selectN = [
-    '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
   var selectUnit = ['days', 'weeks', 'months'];
+
+  DateTime gPickedDate = DateTime.now();
+  int gSelectedHour = -1;
+  int gSelectedMinute = -1;
+
   @override
   Widget build(BuildContext context) {
-    var lightId = widget.deviceId;
+    var blindId = widget.deviceId;
+    var selectN = ['0'];
+
+    for (int i = 1; i <= 30; i++) {
+      selectN.add(i.toString());
+    }
 
     return AlertDialog(
       title: const Text('Scheduler'),
@@ -946,9 +954,10 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
         child: Column(
           children: [
             CostumActionExplicitBlindConfig(
-              deviceId: lightId,
-              colorChangeAction: (color) {
-                setState(() => selectedState = 0);
+              deviceId: blindId,
+              onChanged: (double value) {
+              // Handle the updated value here
+                selectedState = value;
               },
             ),
             const Divider(color: Colors.black),
@@ -1041,12 +1050,40 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
                     if (pickedDate != null) {
                       String formattedDate = DateFormat('yyyy-MM-dd').format(
                           pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                      if (gSelectedHour != -1 && gSelectedMinute != -1) {
+                        final selectedDateTime = DateTime(
+                            pickedDate.year,
+                            pickedDate.month,
+                            pickedDate.day,
+                            gSelectedHour,
+                            gSelectedMinute);
 
-                      setState(() {
-                        dateController.text = formattedDate;
-                        dateCheck = true;
-                        debugPrint((dateCheck).toString());
-                      });
+                        if (selectedDateTime.isAfter(DateTime.now())) {
+                          setState(() {
+                            gPickedDate = pickedDate;
+                            dateController.text = formattedDate;
+                            dateCheck = true;
+                            debugPrint((dateCheck).toString());
+                          });
+                        } else {
+                          setState(() {
+                            dateCheck = false;
+                            dateController.text =
+                                'Invalid date for selected time';
+                          });
+                        }
+                      } else {
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        debugPrint('aqui');
+                        debugPrint(gSelectedHour.toString());
+                        debugPrint(gSelectedMinute.toString());
+                        setState(() {
+                          gPickedDate = pickedDate;
+                          dateController.text = formattedDate;
+                          dateCheck = true;
+                        });
+                      }
                     }
                   },
                 ))),
@@ -1069,15 +1106,24 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
                       context: context,
                     );
 
-                    if (pickedTime != null && pickedTime != TimeOfDay.now()) {
+                    if (pickedTime != null) {
                       final now = DateTime.now();
-                      final selectedDateTime = DateTime(now.year, now.month,
-                          now.day, pickedTime.hour, pickedTime.minute);
-                      if (selectedDateTime.isAfter(now)) {
+
+                      final selectedDateTime = DateTime(
+                          gPickedDate.year,
+                          gPickedDate.month,
+                          gPickedDate.day,
+                          pickedTime.hour,
+                          pickedTime.minute);
+
+                      if (selectedDateTime.isAfter(now) || !dateCheck) {
                         setState(() {
                           timeController.text = pickedTime.format(context);
                           timeCheck = true;
+                          gSelectedHour = pickedTime.hour;
+                          gSelectedMinute = pickedTime.minute;
                         });
+                        debugPrint(gSelectedHour.toString());
                       } else {
                         setState(() {
                           timeCheck = false;
@@ -1092,7 +1138,6 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
       ),
       actions: <Widget>[
         ElevatedButton(
-          child: const Text('Schedule'),
           onPressed: timeCheck && dateCheck
               ? () {
                   blinds[widget.deviceId].schedule.add(BlindProgram(
@@ -1104,8 +1149,21 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
                           : 'no'));
                   widget.updateParent!();
                   Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Program successfully added!'),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () {
+                          blinds[widget.deviceId].schedule.removeLast();
+                          widget.updateParent!();
+                        },
+                      ),
+                    ),
+                  );
                 }
               : null,
+          child: const Text('Schedule'),
         ),
       ],
     );
@@ -1114,11 +1172,13 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
 
 class CostumActionExplicitBlindConfig extends StatefulWidget {
   final int deviceId;
-  final Function colorChangeAction;
+  final ValueChanged<double> onChanged;
+  
   const CostumActionExplicitBlindConfig(
       {super.key,
       required this.deviceId,
-      required this.colorChangeAction});
+      required this.onChanged,
+      });
 
   @override
   State<CostumActionExplicitBlindConfig> createState() =>
@@ -1161,6 +1221,7 @@ class _CostumActionExplicitBlindConfigState
                             setState(() {
                               _value = value;
                             });
+                            widget.onChanged(value); // Call the callback function
                           },
                           activeColor: Colors.blue,
                           inactiveColor: Colors.grey),
