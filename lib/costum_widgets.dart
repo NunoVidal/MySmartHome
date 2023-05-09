@@ -1487,8 +1487,7 @@ class _MyGraphicWidgetState extends State<MyGraphicWidget> {
       const SizedBox(
         height: 20,
       ),
-      Expanded(
-        child: SfCartesianChart(
+      SfCartesianChart(
           primaryXAxis: DateTimeAxis(),
           series: <LineSeries<DataPoint, DateTime>>[
             LineSeries<DataPoint, DateTime>(
@@ -1497,8 +1496,8 @@ class _MyGraphicWidgetState extends State<MyGraphicWidget> {
               yValueMapper: (DataPoint dataPoint, _) => dataPoint.value,
             )
           ],
-        ),
       ),
+      
     ]));
   }
 
