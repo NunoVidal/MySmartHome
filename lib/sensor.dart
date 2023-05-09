@@ -92,22 +92,12 @@ class _SensorState extends State<SensorState>
                 //OTHER TAB
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    //Initialize the spark charts widget
-                    child: SfSparkLineChart.custom(
-                      //Enable the trackball
-                      trackball: const SparkChartTrackball(
-                          activationMode: SparkChartActivationMode.tap),
-                      //Enable marker
-                      marker: const SparkChartMarker(
-                          displayMode: SparkChartMarkerDisplayMode.all),
-                      //Enable data label
-                      labelDisplayMode: SparkChartLabelDisplayMode.all,
-                      xValueMapper: (int index) => myData[index].key,
-                      yValueMapper: (int index) => myData[index].value,
-                      dataCount: 5,
-                    ),
-                  ),
+                      padding: const EdgeInsets.all(8.0),
+                      //Initialize the spark charts widget
+                      child: MyGraphicWidget(
+                          initialDate: startDate,
+                          finalDate: endDate,
+                          data: myData)),
                 )
               ],
             ),

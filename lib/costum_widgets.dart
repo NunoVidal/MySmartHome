@@ -4,6 +4,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:intl/intl.dart';
 
+import 'package:syncfusion_flutter_charts/charts.dart';
+
 import 'my_devices.dart';
 import 'devices.dart';
 
@@ -1329,10 +1331,17 @@ class _DataTableFilterState extends State<DataTableFilter> {
     _filterData(widget.initialDate, widget.finalDate);
   }
 
-  void _filterData(DateTime initialDate, DateTime endDate) {
+  void _filterData(DateTime initialDate, DateTime endDate,
+      [String filter = '']) {
     rows.clear();
     List<DataRow> filteredRows = widget.data.where((data) {
-      return data.key.isAfter(initialDate) && data.key.isBefore(endDate);
+      if (filter != '') {
+        return data.key.isAfter(initialDate) &&
+            data.key.isBefore(endDate) &&
+            data.toString().toLowerCase().contains(filter.toLowerCase());
+      } else {
+        return data.key.isAfter(initialDate) && data.key.isBefore(endDate);
+      }
     }).map((data) {
       return DataRow(
         cells: [
@@ -1345,8 +1354,18 @@ class _DataTableFilterState extends State<DataTableFilter> {
     filteredRows.forEach((element) {
       rows.add(element);
     });
+
     FinalDate = endDate;
     InitialDate = initialDate;
+  }
+
+  String _filterText = '';
+
+  void _filterRowsText(String filterText) {
+    setState(() {
+      _filterText = filterText.toLowerCase();
+      _filterData(InitialDate, FinalDate, _filterText);
+    });
   }
 
   @override
@@ -1370,6 +1389,17 @@ class _DataTableFilterState extends State<DataTableFilter> {
       ]),
       const SizedBox(
         height: 20,
+      ),
+      Container(
+        margin:
+            EdgeInsets.all(10.0), // set the margin to 10 pixels on all sides
+        child: SizedBox(
+          width: 300.0, // set the width to 300 pixels
+          child: TextFormField(
+            onChanged: _filterRowsText,
+            decoration: InputDecoration(hintText: 'Search'),
+          ),
+        ),
       ),
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -1395,4 +1425,99 @@ class _DataTableFilterState extends State<DataTableFilter> {
       _filterData(InitialDate, endDate);
     });
   }
+}
+
+class MyGraphicWidget extends StatefulWidget {
+  final DateTime initialDate;
+  final DateTime finalDate;
+  final List<MapEntry<DateTime, double>> data;
+
+  MyGraphicWidget(
+      {required this.initialDate, required this.finalDate, required this.data});
+
+  @override
+  _MyGraphicWidgetState createState() => _MyGraphicWidgetState();
+}
+
+class _MyGraphicWidgetState extends State<MyGraphicWidget> {
+  List<DataPoint> rows = [];
+  DateTime InitialDate = DateTime.now();
+  DateTime FinalDate = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    _filterData(widget.initialDate, widget.finalDate);
+  }
+
+  void _filterData(DateTime initialDate, DateTime endDate) {
+    rows.clear();
+    List<DataPoint> filteredRows = widget.data.where((data) {
+      return data.key.isAfter(initialDate) && data.key.isBefore(endDate);
+    }).map((data) {
+      return DataPoint(data.key, data.value);
+    }).toList();
+
+    FinalDate = endDate;
+    InitialDate = initialDate;
+
+    filteredRows.forEach((element) {
+      rows.add(element);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        child: Column(children: [
+      Row(children: [
+        MyDateTimePicker(
+          label: 'From',
+          defaultValue: InitialDate,
+          onDateChanged: _onDateChangedInitial,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        MyDateTimePicker(
+          label: "To",
+          defaultValue: FinalDate,
+          onDateChanged: _onDateChangedFinal,
+        ),
+      ]),
+      const SizedBox(
+        height: 20,
+      ),
+      Expanded(
+        child: SfCartesianChart(
+          primaryXAxis: DateTimeAxis(),
+          series: <LineSeries<DataPoint, DateTime>>[
+            LineSeries<DataPoint, DateTime>(
+              dataSource: rows,
+              xValueMapper: (DataPoint dataPoint, _) => dataPoint.date,
+              yValueMapper: (DataPoint dataPoint, _) => dataPoint.value,
+            )
+          ],
+        ),
+      ),
+    ]));
+  }
+
+  void _onDateChangedInitial(DateTime initDate) {
+    setState(() {
+      _filterData(initDate, FinalDate);
+    });
+  }
+
+  void _onDateChangedFinal(DateTime endDate) {
+    setState(() {
+      _filterData(InitialDate, endDate);
+    });
+  }
+}
+
+class DataPoint {
+  final DateTime date;
+  final double value;
+
+  DataPoint(this.date, this.value);
 }
