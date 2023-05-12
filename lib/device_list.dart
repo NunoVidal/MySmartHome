@@ -21,6 +21,7 @@ class _DeviceListState extends State<DeviceList> {
     if (super.widget.type == "lighting") {
       return Scaffold(
         appBar: AppBar(
+          title: const Text('Lights'),
           leading: BackButton(
             onPressed: () => Navigator.pop(context),
           ),
@@ -72,6 +73,7 @@ class _DeviceListState extends State<DeviceList> {
     } else if (super.widget.type == "Sensor") {
       return Scaffold(
         appBar: AppBar(
+          title: const Text('Sensors'),
           leading: BackButton(
             onPressed: () => Navigator.pop(context),
           ),

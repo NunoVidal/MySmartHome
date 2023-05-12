@@ -226,7 +226,7 @@ class PopupMenu extends StatefulWidget {
   State<PopupMenu> createState() => _PopupMenuState();
 }
 
-enum SampleItem { delete, moreInfo }
+enum SampleItem { delete, moreInfo, settings }
 
 class _PopupMenuState extends State<PopupMenu> {
   SampleItem? selectedMenu;
@@ -239,11 +239,20 @@ class _PopupMenuState extends State<PopupMenu> {
       onSelected: (SampleItem item) {
         setState(() {
           selectedMenu = item;
+          if (selectedMenu == SampleItem.settings) {
+            // Open a modal here.
+            
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const SensorSettingsModal();
+              });
+          }
         });
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
         const PopupMenuItem<SampleItem>(
-          value: SampleItem.moreInfo,
+          value: SampleItem.settings,
           child: Text('Settings'),
         ),
         const PopupMenuItem<SampleItem>(
@@ -1250,17 +1259,18 @@ class SensorSettingsModal extends StatefulWidget {
 
 class _SensorSettingsModalState extends State<SensorSettingsModal> {
   bool selectedState = false;
+  int initValue = sensores[0].dataGatherInterval;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Settings'),
+      title: const Text('Sensor Settings'),
       content: SingleChildScrollView(
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(children: const [Icon(Icons.sensors), Text('State')]),
+                Column(children: const [Text('State')]),
                 CostumActionSwitch(
                   action: (value) {
                     setState(() => selectedState = value);
@@ -1269,12 +1279,28 @@ class _SensorSettingsModalState extends State<SensorSettingsModal> {
               ],
             ),
             const Divider(color: Colors.black),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Data harvest: "),
+                NumberPicker(
+                  minValue: 1,
+                  maxValue: 20,
+                  value: initValue,
+                  onChanged: (value) {
+                    setState(() => initValue = value);
+                  }, 
+                ),
+                const Text("min")
+              ])
           ],
         ),
       ),
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
+
+            sensores[0].dataGatherInterval = initValue;
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -1282,7 +1308,7 @@ class _SensorSettingsModalState extends State<SensorSettingsModal> {
               ),
             );
           },
-          child: const Text('Schedule'),
+          child: const Text('Save'),
         ),
       ],
     );
