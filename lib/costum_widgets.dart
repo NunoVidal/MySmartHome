@@ -46,7 +46,7 @@ class DeviceGroupElevatedCard extends StatelessWidget {
                 child: const Text("Device List"),
               ),
               const SizedBox(width: 8),
-              const PopupMenu(),
+              //const PopupMenu(),
             ]),
 
             /*
@@ -124,7 +124,7 @@ class DeviceElevatedCard extends StatelessWidget {
                     const SizedBox(
                       width: 30,
                     ),
-                    const PopupMenu(),
+                    //const PopupMenu(),
                     const Icon(Icons.arrow_forward)
                   ],
                 ),
@@ -1308,13 +1308,16 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController dateController = TextEditingController();
-
+  
+  
   String label = "Enter Date";
 
   _MyDateTimePickerState(this.label, this.selectedDate);
 
   @override
   Widget build(BuildContext context) {
+    dateController.text = "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
+  
     return Container(
       padding: const EdgeInsets.all(15),
       height: 100,
@@ -1533,25 +1536,28 @@ class _MyGraphicWidgetState extends State<MyGraphicWidget> {
     return SingleChildScrollView(
         child: Column(children: [
       Row(children: [
-        MyDateTimePicker(
+         Expanded( // Added Expanded here
+              child: MyDateTimePicker(
           label: 'From',
           defaultValue: InitialDate,
           onDateChanged: _onDateChangedInitial,
-        ),
+        )),
         const SizedBox(
-          width: 10,
+          width: 5,
         ),
-        MyDateTimePicker(
+         Expanded( // Added Expanded here
+              child: MyDateTimePicker(
           label: "To",
           defaultValue: FinalDate,
           onDateChanged: _onDateChangedFinal,
-        ),
+        )),
       ]),
       const SizedBox(
         height: 20,
       ),
       SfCartesianChart(
           primaryXAxis: DateTimeAxis(),
+          tooltipBehavior: TooltipBehavior(enable: true),
           series: <LineSeries<DataPoint, DateTime>>[
             LineSeries<DataPoint, DateTime>(
               dataSource: rows,

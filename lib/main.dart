@@ -30,6 +30,19 @@ void main() {
   }
 
   values[DateTime(2023, 5, 10, 11, 0, 0)] = 77.5;
+  values[DateTime(2023, 5, 10, 11, 05, 0)] = 70;
+  values[DateTime(2023, 5, 10, 11, 10, 0)] = 67.3;
+  values[DateTime(2023, 5, 10, 11, 15, 0)] = 65;
+  values[DateTime(2023, 5, 10, 11, 20, 0)] = 66.2;
+  values[DateTime(2023, 5, 10, 11, 25, 0)] = 68;
+  values[DateTime(2023, 5, 10, 11, 30, 0)] = 71.2;
+  values[DateTime(2023, 5, 10, 11, 35, 0)] = 72.1;
+  values[DateTime(2023, 5, 10, 11, 40, 0)] = 77.1;
+  values[DateTime(2023, 5, 10, 11, 45, 0)] = 76.4;
+  values[DateTime(2023, 5, 10, 11, 50, 0)] = 79.4;
+  values[DateTime(2023, 5, 10, 11, 55, 0)] = 72;
+  values[DateTime(2023, 5, 10, 12, 00, 0)] = 75.2;
+
   sensores[0].createHistory(values);
   runApp(const MyApp());
 }

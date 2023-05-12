@@ -58,7 +58,7 @@ class Sensor {
   String name = "";
   String category = "";
   int dataGatherInterval = 5; //in minutes
-  double currentVal = 0.0;
+  double currentVal = 53.2;
   String protocol;
   String unit = "";
   Map<DateTime, double> history = {};
