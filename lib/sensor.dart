@@ -55,6 +55,20 @@ class _SensorState extends State<SensorState>
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  IconButton(
+                    iconSize: 20,
+                    color: Colors.grey,
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const SensorSettingsModal();
+                          });
+                    },
+                    icon: Icon(
+                      Icons.settings,
+                    ),
+                  ),
                   SwitchExample(deviceId: sensorId),
                   const SizedBox(
                     width: 30,

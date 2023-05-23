@@ -241,12 +241,12 @@ class _PopupMenuState extends State<PopupMenu> {
           selectedMenu = item;
           if (selectedMenu == SampleItem.settings) {
             // Open a modal here.
-            
+
             showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const SensorSettingsModal();
-              });
+                context: context,
+                builder: (BuildContext context) {
+                  return const SensorSettingsModal();
+                });
           }
         });
       },
@@ -901,9 +901,8 @@ class _BlindConfigState extends State<BlindConfig> {
                           setState(() {
                             _value = value;
                             final int deviceId = widget.deviceId;
-                            final Blind blind = blinds.firstWhere(
-                              (blind) => blind.id == deviceId
-                            );
+                            final Blind blind = blinds
+                                .firstWhere((blind) => blind.id == deviceId);
                             if (blind != null) {
                               blind.state = value;
                             }
@@ -967,7 +966,7 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
             CostumActionExplicitBlindConfig(
               deviceId: blindId,
               onChanged: (double value) {
-              // Handle the updated value here
+                // Handle the updated value here
                 selectedState = value;
               },
             ),
@@ -1184,12 +1183,12 @@ class _BlindProgramShceduleModalState extends State<BlindProgramShceduleModal> {
 class CostumActionExplicitBlindConfig extends StatefulWidget {
   final int deviceId;
   final ValueChanged<double> onChanged;
-  
-  const CostumActionExplicitBlindConfig(
-      {super.key,
-      required this.deviceId,
-      required this.onChanged,
-      });
+
+  const CostumActionExplicitBlindConfig({
+    super.key,
+    required this.deviceId,
+    required this.onChanged,
+  });
 
   @override
   State<CostumActionExplicitBlindConfig> createState() =>
@@ -1232,7 +1231,8 @@ class _CostumActionExplicitBlindConfigState
                             setState(() {
                               _value = value;
                             });
-                            widget.onChanged(value); // Call the callback function
+                            widget
+                                .onChanged(value); // Call the callback function
                           },
                           activeColor: Colors.blue,
                           inactiveColor: Colors.grey),
@@ -1267,39 +1267,25 @@ class _SensorSettingsModalState extends State<SensorSettingsModal> {
       content: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(children: const [Text('State')]),
-                CostumActionSwitch(
-                  action: (value) {
-                    setState(() => selectedState = value);
-                  },
-                ),
-              ],
-            ),
             const Divider(color: Colors.black),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Data harvest: "),
-                NumberPicker(
-                  minValue: 1,
-                  maxValue: 20,
-                  value: initValue,
-                  onChanged: (value) {
-                    setState(() => initValue = value);
-                  }, 
-                ),
-                const Text("min")
-              ])
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              const Text("Data harvest: "),
+              NumberPicker(
+                minValue: 1,
+                maxValue: 20,
+                value: initValue,
+                onChanged: (value) {
+                  setState(() => initValue = value);
+                },
+              ),
+              const Text("min")
+            ])
           ],
         ),
       ),
       actions: <Widget>[
         ElevatedButton(
           onPressed: () {
-
             sensores[0].dataGatherInterval = initValue;
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -1334,16 +1320,16 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController dateController = TextEditingController();
-  
-  
+
   String label = "Enter Date";
 
   _MyDateTimePickerState(this.label, this.selectedDate);
 
   @override
   Widget build(BuildContext context) {
-    dateController.text = "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
-  
+    dateController.text =
+        "${selectedDate.year}/${selectedDate.month}/${selectedDate.day} ${selectedDate.hour}:${selectedDate.minute}";
+
     return Container(
       padding: const EdgeInsets.all(15),
       height: 100,
@@ -1562,8 +1548,9 @@ class _MyGraphicWidgetState extends State<MyGraphicWidget> {
     return SingleChildScrollView(
         child: Column(children: [
       Row(children: [
-         Expanded( // Added Expanded here
-              child: MyDateTimePicker(
+        Expanded(
+            // Added Expanded here
+            child: MyDateTimePicker(
           label: 'From',
           defaultValue: InitialDate,
           onDateChanged: _onDateChangedInitial,
@@ -1571,8 +1558,9 @@ class _MyGraphicWidgetState extends State<MyGraphicWidget> {
         const SizedBox(
           width: 5,
         ),
-         Expanded( // Added Expanded here
-              child: MyDateTimePicker(
+        Expanded(
+            // Added Expanded here
+            child: MyDateTimePicker(
           label: "To",
           defaultValue: FinalDate,
           onDateChanged: _onDateChangedFinal,
@@ -1582,17 +1570,16 @@ class _MyGraphicWidgetState extends State<MyGraphicWidget> {
         height: 20,
       ),
       SfCartesianChart(
-          primaryXAxis: DateTimeAxis(),
-          tooltipBehavior: TooltipBehavior(enable: true),
-          series: <LineSeries<DataPoint, DateTime>>[
-            LineSeries<DataPoint, DateTime>(
-              dataSource: rows,
-              xValueMapper: (DataPoint dataPoint, _) => dataPoint.date,
-              yValueMapper: (DataPoint dataPoint, _) => dataPoint.value,
-            )
-          ],
+        primaryXAxis: DateTimeAxis(),
+        tooltipBehavior: TooltipBehavior(enable: true),
+        series: <LineSeries<DataPoint, DateTime>>[
+          LineSeries<DataPoint, DateTime>(
+            dataSource: rows,
+            xValueMapper: (DataPoint dataPoint, _) => dataPoint.date,
+            yValueMapper: (DataPoint dataPoint, _) => dataPoint.value,
+          )
+        ],
       ),
-      
     ]));
   }
 
