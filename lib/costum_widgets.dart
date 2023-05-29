@@ -121,6 +121,8 @@ class DeviceElevatedCard extends StatelessWidget {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Text(
+                        "${blinds[id].state.toInt()}%"),
                     const SizedBox(
                       width: 30,
                     ),
